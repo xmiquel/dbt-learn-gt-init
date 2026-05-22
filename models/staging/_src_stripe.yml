@@ -12,3 +12,8 @@ sources:
             error_after:
               count: 48
               period: day
+        columns:
+          - name: id
+            data_tests:
+              - unique
+              - not_null
