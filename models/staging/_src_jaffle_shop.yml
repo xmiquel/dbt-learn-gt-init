@@ -1,0 +1,24 @@
+sources:
+  - name: jaffle_shop
+    database: raw
+    schema: jaffle_shop
+    tables: 
+      - name: customers
+      - name: orders
+        config:
+          freshness:
+            warn_after:
+              count: 24
+              period: hour
+            error_after:
+              count: 48
+              period: hour
+# esto funcionaría con una columna existente, pero en databricks no se llama así o directamente funciona sin esto y pilla el updated at de los details de la tabla:
+#          loaded_at_field: _etl_loaded_at
+        
+  - name: stripe
+    database: raw
+    schema: stripe
+    tables: 
+      - name: payment
+
