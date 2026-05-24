@@ -4,13 +4,16 @@ sources:
   - name: stripe
     database: raw
     schema: stripe
-    tables: 
+    tables:
       - name: payment
         config:
+          loaded_at_field: cast(created as timestamp)
           freshness:
-            warn_after: {count: 24, period: hour}
+            warn_after:
+              count: 2400
+              period: day
             error_after:
-              count: 48
+              count: 4000
               period: day
         columns:
           - name: id

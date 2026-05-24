@@ -1,0 +1,19 @@
+models:
+  - name: stg_stripe__payments
+    description: one unique payment per row
+    columns:
+      - name: payment_id
+        description: the primary key
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: fk to stg_orders.order_id
+      - name: payment_method
+        description: payment method
+      - name: payment_status
+        description: status of the payment
+      - name: amount
+        description: "{{ doc('payment_amount') }}"
+      - name: created_at
+        description: payment's created date  
