@@ -1,0 +1,31 @@
+# snapshots:
+#   - name: string
+#     relation: realation # source('my_source', 'my_table') or ref('my_model')
+#     description: markdown_string
+#     config:
+#       database: string
+#       schema: string
+#       alias: string
+#       strategy: timestamp | check
+#       unique_key: column_name or expression
+#       check_cols: [column_name] # | all
+#       updated_at: column_name
+#       snapshot_meta_column_names: dictionary
+#       dbt_valid_to_current: string
+#       hard_deletes: ignore # | invalidate | new_record
+
+snapshots:
+  - name: orders_snapshot
+    relation: source('jaffle_shop', 'orders')
+    description: A snapshot of the orders table
+    config:
+      database: analytics
+      schema: snapshot
+      strategy: check
+      unique_key: ID
+      check_cols: # tienen que respetar mayúsculas con la bbdd
+        - USER_ID 
+        - ORDER_DATE
+        - STATUS
+      hard_deletes: ignore
+      dbt_valid_to_current: "to_date('2199-12-31')"
