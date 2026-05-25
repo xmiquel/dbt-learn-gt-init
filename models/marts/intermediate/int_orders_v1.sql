@@ -1,0 +1,39 @@
+
+with payments as (
+    select * from {{ ref('stg_payments_v1') }}
+    
+    where payment_status != 'fail'
+),
+
+orders as (
+    select * from {{ ref('stg_orders_v1') }}
+),
+
+
+order_totals as (
+
+    select 
+        order_id,
+        payment_status,
+        sum(payment_amount) as order_value_dollars
+        
+    from payments
+
+    group by order_id, payment_status
+
+),
+
+order_values_joined as (
+
+    select 
+        orders.*,
+        order_totals.payment_status,
+        order_totals.order_value_dollars
+
+    from orders
+    left join order_totals 
+    on orders.order_id = order_totals.order_id
+
+)
+
+select * from order_values_joined
