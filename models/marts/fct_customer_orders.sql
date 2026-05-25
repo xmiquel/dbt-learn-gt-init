@@ -1,3 +1,20 @@
+{{
+    config (
+        materialized = 'incremental',
+        unique_key = 'order_id',
+        incremental_strategy = 'merge',
+        on_schema_change = 'fail'
+    )
+}}
+
+-- https://learn.getdbt.com/learn/course/incremental-models/incremental-strategy-30min/incremental-strategy?page=11
+--  append merge delete+insert (no databricks) insert_overwrite (no va bien en databricks) microbatch -- no necesita ser incremental
+-- for insert+overwrite        partition_by = {
+--            'field':'order_placed_at',
+--            'data_type':'date',
+--            'granularity':'day',
+--        },
+
 with
 
 -- Import CTEs
@@ -68,3 +85,7 @@ select
 )
 
 select * from final
+{% if is_incremental()%}
+    where order_placed_at >= (select max(order_placed_at)-1 from {{ this }})
+{% endif %}
+order by order_placed_at desc
